@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.droidsmith.mcunexus.ui.screens.CharactersScreen
 import com.droidsmith.mcunexus.ui.screens.HomeScreen
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 
@@ -17,7 +18,8 @@ fun MCUNexusApp() {
             .fillMaxSize()
 
     ) {
-        HomeScreen()
+        //HomeScreen()
+        CharactersScreen()
 
     }
 }
