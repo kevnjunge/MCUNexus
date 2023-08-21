@@ -22,8 +22,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,69 +41,77 @@ import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
 
 
-@Composable
-fun HomeScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-
-        ) {
-        Column {
-            TopAppBar()
-            MarvelsUpcoming()
-            ComicsContent(
-                comicItems = listOf(
-                    Comic(
-                        title = "CHARACTERS",
-                        R.drawable.iron_man
-                    ),
-                    Comic(
-                        title = "COMICS",
-                        R.drawable.comic
-                    ),
-                    Comic(
-                        title = "CREATORS",
-                        R.drawable.iron_man
-                    ),
-                    Comic(
-                        title = "EVENTS",
-                        R.drawable.iron_man
-                    ),
-                    Comic(
-                        title = "SERIES",
-                        R.drawable.iron_man
-                    ),
-                    Comic(
-                        title = "STORIES",
-                        R.drawable.comics
-                    ),
-                )
-            )
-        }
-    }
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = "MARVEL",
-                style = MaterialTheme.typography.displayLarge,
-                fontFamily = marvel,
-                color = TextWhite
+fun HomeScreen() {
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "MARVEL",
+                        style = MaterialTheme.typography.displayLarge,
+                        fontFamily = marvel,
+                        color = TextWhite
+                    )
+
+                },
+                colors = topAppBarColors(
+                    containerColor = MarvelRed,
+                )
             )
 
         },
+        content = { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues = paddingValues),
 
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MarvelRed),
-        modifier = modifier
-            .padding(16.dp)
+                ) {
+                Column {
 
+                    MarvelsUpcoming()
+                    ComicsContent(
+                        comicItems = listOf(
+                            Comic(
+                                title = "CHARACTERS",
+                                R.drawable.iron_man
+                            ),
+                            Comic(
+                                title = "COMICS",
+                                R.drawable.comic
+                            ),
+                            Comic(
+                                title = "CREATORS",
+                                R.drawable.iron_man
+                            ),
+                            Comic(
+                                title = "EVENTS",
+                                R.drawable.iron_man
+                            ),
+                            Comic(
+                                title = "SERIES",
+                                R.drawable.iron_man
+                            ),
+                            Comic(
+                                title = "STORIES",
+                                R.drawable.comics
+                            ),
+                        )
+                    )
+                }
+            }
+
+
+        },
+        containerColor = MarvelRed
     )
 
+
 }
+
 
 @Composable
 fun MarvelsUpcoming() {
