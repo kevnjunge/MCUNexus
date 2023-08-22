@@ -17,12 +17,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -52,7 +54,10 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharactersScreen() {
+fun CharactersScreen(
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,6 +67,17 @@ fun CharactersScreen() {
                         fontFamily = marvel,
                         color = TextWhite
                     )
+                },
+                navigationIcon = {
+                    if (canNavigateBack) {
+                        IconButton(onClick = navigateUp) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Back Button",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MarvelRed

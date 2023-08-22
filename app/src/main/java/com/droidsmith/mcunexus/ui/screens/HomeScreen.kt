@@ -3,6 +3,7 @@ package com.droidsmith.mcunexus.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.droidsmith.mcunexus.Comic
 import com.droidsmith.mcunexus.R
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
@@ -43,7 +45,9 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController
+) {
 
     Scaffold(
         topBar = {
@@ -98,8 +102,9 @@ fun HomeScreen() {
                             Comic(
                                 title = "STORIES",
                                 R.drawable.comics
-                            ),
-                        )
+                            )
+                        ),
+                        navController = navController
                     )
                 }
             }
@@ -178,7 +183,10 @@ fun MarvelsUpcoming() {
 }
 
 @Composable
-fun ComicsContent(comicItems: List<Comic>) {
+fun ComicsContent(
+    comicItems: List<Comic>,
+    navController: NavController
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -188,7 +196,12 @@ fun ComicsContent(comicItems: List<Comic>) {
             modifier = Modifier.fillMaxHeight()
         ) {
             items(comicItems.size) {
-                ComicsContentItems(comic = comicItems[it])
+                ComicsContentItems(
+                    comic = comicItems[it],
+                    onItemClick = {
+                        navController.navigate(route = Screen.Character.route)
+                    }
+                )
             }
 
         }
@@ -197,9 +210,11 @@ fun ComicsContent(comicItems: List<Comic>) {
 
 }
 
+
 @Composable
 fun ComicsContentItems(
-    comic: Comic
+    comic: Comic,
+    onItemClick: () -> Unit
 ) {
     BoxWithConstraints(
         modifier = Modifier
@@ -208,6 +223,10 @@ fun ComicsContentItems(
             .clip(RoundedCornerShape(10.dp))
             .background(Color.White)
             .fillMaxSize()
+            .clickable {
+                onItemClick.invoke()
+            }
+
     ) {
         Text(
             text = comic.title,
