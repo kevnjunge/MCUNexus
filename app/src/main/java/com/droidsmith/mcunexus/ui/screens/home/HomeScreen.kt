@@ -1,4 +1,4 @@
-package com.droidsmith.mcunexus.ui.screens
+package com.droidsmith.mcunexus.ui.screens.home
 
 
 import androidx.compose.foundation.Image
@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.droidsmith.mcunexus.Comic
 import com.droidsmith.mcunexus.R
+import com.droidsmith.mcunexus.ui.screens.Screen
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
@@ -195,11 +196,19 @@ fun ComicsContent(
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 100.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
-            items(comicItems.size) {
+            items(comicItems.size) { index ->
                 ComicsContentItems(
-                    comic = comicItems[it],
-                    onItemClick = {
-                        navController.navigate(route = Screen.Character.route)
+                    comic = comicItems[index],
+                    index = index,
+                    onItemClick = { clickedIndex ->
+                        when (clickedIndex) {
+                            0 -> navController.navigate(route = Screen.Character.route)
+                            1 -> navController.navigate(route = Screen.Comics.route)
+                            2 -> navController.navigate(route = Screen.Creators.route)
+                            3 -> navController.navigate(route = Screen.Events.route)
+                            4 -> navController.navigate(route = Screen.Series.route)
+                            5 -> navController.navigate(route = Screen.Stories.route)
+                        }
                     }
                 )
             }
@@ -214,7 +223,8 @@ fun ComicsContent(
 @Composable
 fun ComicsContentItems(
     comic: Comic,
-    onItemClick: () -> Unit
+    index: Int,
+    onItemClick: (Int) -> Unit
 ) {
     BoxWithConstraints(
         modifier = Modifier
@@ -224,7 +234,7 @@ fun ComicsContentItems(
             .background(Color.White)
             .fillMaxSize()
             .clickable {
-                onItemClick.invoke()
+                onItemClick.invoke(index)
             }
 
     ) {

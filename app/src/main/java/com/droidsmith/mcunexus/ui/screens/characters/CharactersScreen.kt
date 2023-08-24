@@ -1,4 +1,4 @@
-package com.droidsmith.mcunexus.ui.screens
+package com.droidsmith.mcunexus.ui.screens.characters
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
