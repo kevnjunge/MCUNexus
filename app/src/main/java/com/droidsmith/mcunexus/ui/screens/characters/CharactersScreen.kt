@@ -1,6 +1,5 @@
 package com.droidsmith.mcunexus.ui.screens.characters
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -22,6 +20,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +32,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,13 +41,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.droidsmith.mcunexus.R
-import com.droidsmith.mcunexus.ui.Characters
+import com.droidsmith.mcunexus.domain.model.Character
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
@@ -56,8 +62,16 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 @Composable
 fun CharactersScreen(
     canNavigateBack: Boolean,
+    viewModel: CharactersViewModel = hiltViewModel(),
     navigateUp: () -> Unit
 ) {
+    // Collect data from the ViewModel
+    val mcuListState by viewModel._mcuValue.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        // Fetch data when the Composable is first created
+        viewModel.getAllCharactersData(offset = 0)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -93,46 +107,23 @@ fun CharactersScreen(
             ) {
                 Column {
                     SearchCharacterSection()
-                    CharactersDisplay(
-                        charactersList = listOf(
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "BLACK PANTHER",
-                                R.drawable.black_panther
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.iron_man
-                            ),
-                            Characters(
-                                characterName = "IRON MAN",
-                                R.drawable.trial_img
-                            )
+
+                    if (mcuListState.characterList.isNotEmpty()) {
+                        CharactersDisplay(charactersList = mcuListState.characterList)
+                    } else if (mcuListState.isLoading) {
+                        // Show loading indicator
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp)
                         )
-                    )
+                    } else if (mcuListState.error.isNotEmpty()) {
+                        // Show error message
+                        Text(
+                            text = mcuListState.error,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
 
                 }
 
@@ -216,7 +207,7 @@ fun SearchCharacterSection() {
 }
 
 @Composable
-fun CharactersDisplay(charactersList: List<Characters>) {
+fun CharactersDisplay(charactersList: List<Character>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -236,7 +227,7 @@ fun CharactersDisplay(charactersList: List<Characters>) {
 
 @Composable
 fun CharacterCard(
-    characters: Characters
+    characters: Character
 ) {
     Card(
         modifier = Modifier
@@ -253,14 +244,23 @@ fun CharacterCard(
 
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center)
-                        .size(size = 72.dp),
-                    painter = painterResource(id = characters.characterImage),
-                    contentDescription = characters.characterName
+                val imageUrl = "${
+                    characters.thumbnail.replace(
+                        "http",
+                        "https"
+                    )
+                }/portrait_xlarge.${characters.thumbnailExt}"
 
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    error = painterResource(R.drawable.ic_broken_image),
+                    placeholder = painterResource(R.drawable.loading_img),
+                    contentDescription = characters.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
             }
@@ -269,7 +269,7 @@ fun CharacterCard(
                     .padding(5.dp)
             ) // gap between image and text
             Text(
-                text = characters.characterName,
+                text = characters.name,
                 fontSize = 20.sp,
                 fontFamily = marvel,
                 fontWeight = FontWeight.Medium,
