@@ -12,7 +12,7 @@ interface MCUApiService {
         @Query("apikey")apikey:String = Constants.API_KEY,
         @Query("ts")ts:String = Constants.timeStamp,
         @Query("hash")hash:String = Constants.hash(),
-        @Query("offset")offset:String
+        @Query("offset")offset:String = "0"
     ): CharactersDTO
 
 }

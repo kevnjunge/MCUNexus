@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -62,9 +63,10 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 @Composable
 fun CharactersScreen(
     canNavigateBack: Boolean,
-    viewModel: CharactersViewModel = hiltViewModel(),
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+  viewModel: CharactersViewModel = hiltViewModel()
 ) {
+
     // Collect data from the ViewModel
     val mcuListState by viewModel._mcuValue.collectAsState()
 
@@ -270,11 +272,13 @@ fun CharacterCard(
             ) // gap between image and text
             Text(
                 text = characters.name,
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontFamily = marvel,
                 fontWeight = FontWeight.Medium,
+                maxLines = 2,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(60.dp)//temporal fix to cards being same size
                     .wrapContentWidth()
             )
         }

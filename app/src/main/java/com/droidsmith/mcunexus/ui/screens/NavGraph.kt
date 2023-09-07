@@ -1,13 +1,11 @@
 package com.droidsmith.mcunexus.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.droidsmith.mcunexus.ui.screens.characterDetail.CharacterDetailScreen
 import com.droidsmith.mcunexus.ui.screens.characters.CharactersScreen
-import com.droidsmith.mcunexus.ui.screens.characters.CharactersViewModel
 import com.droidsmith.mcunexus.ui.screens.comics.ComicsScreen
 import com.droidsmith.mcunexus.ui.screens.creators.CreatorsScreen
 import com.droidsmith.mcunexus.ui.screens.events.EventsScreen
@@ -31,10 +29,8 @@ fun SetupNavGraph(
         composable(
             route = Screen.Character.route
         ) {
-            val viewModel: CharactersViewModel = viewModel()
             CharactersScreen(
                 canNavigateBack = navController.previousBackStackEntry != null,
-                viewModel = viewModel,
                 navigateUp = { navController.navigateUp() }
             )
         }
