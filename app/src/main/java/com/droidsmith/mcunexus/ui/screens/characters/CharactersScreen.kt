@@ -50,10 +50,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.droidsmith.mcunexus.R
 import com.droidsmith.mcunexus.domain.model.Character
+import com.droidsmith.mcunexus.ui.screens.Screen
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
@@ -64,7 +66,8 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 fun CharactersScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-  viewModel: CharactersViewModel = hiltViewModel()
+    navController: NavHostController,
+    viewModel: CharactersViewModel = hiltViewModel()
 ) {
 
     // Collect data from the ViewModel
@@ -111,7 +114,7 @@ fun CharactersScreen(
                     SearchCharacterSection()
 
                     if (mcuListState.characterList.isNotEmpty()) {
-                        CharactersDisplay(charactersList = mcuListState.characterList)
+                        CharactersDisplay(charactersList = mcuListState.characterList, navController = navController)
                     } else if (mcuListState.isLoading) {
                         // Show loading indicator
                         CircularProgressIndicator(
@@ -209,7 +212,7 @@ fun SearchCharacterSection() {
 }
 
 @Composable
-fun CharactersDisplay(charactersList: List<Character>) {
+fun CharactersDisplay(charactersList: List<Character>, navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -220,7 +223,7 @@ fun CharactersDisplay(charactersList: List<Character>) {
             modifier = Modifier.fillMaxHeight()
         ) {
             items(charactersList.size) {
-                CharacterCard(characters = charactersList[it])
+                CharacterCard(characters = charactersList[it] ,navController = navController)
             }
         }
     }
@@ -229,13 +232,18 @@ fun CharactersDisplay(charactersList: List<Character>) {
 
 @Composable
 fun CharacterCard(
-    characters: Character
+    characters: Character,
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                // Navigate to the CharactersDetail screen and pass the character ID as a navigation argument
+                navController.navigate(route = Screen.CharacterDetail.passId(characters.id))
+            },
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),

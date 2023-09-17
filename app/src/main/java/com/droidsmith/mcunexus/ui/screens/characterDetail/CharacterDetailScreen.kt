@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,9 +42,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.droidsmith.mcunexus.R
 import com.droidsmith.mcunexus.ui.Characters
+import com.droidsmith.mcunexus.ui.screens.CHARACTER_DETAIL_ARGUMENT_KEY
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
@@ -56,6 +59,10 @@ fun CharacterDetailScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit
 ) {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val characterId = navBackStackEntry?.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY)
+
     Scaffold(
         topBar = {
             TopAppBar(
