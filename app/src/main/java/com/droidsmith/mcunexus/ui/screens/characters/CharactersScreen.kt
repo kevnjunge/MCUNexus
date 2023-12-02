@@ -1,5 +1,6 @@
 package com.droidsmith.mcunexus.ui.screens.characters
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -125,7 +126,7 @@ fun CharactersScreen(
                     } else if (mcuListState.error.isNotEmpty()) {
                         // Show error message
                         Text(
-                            text = mcuListState.error,
+                            text = "Something ain't right check your internet ${mcuListState.error}",
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -241,8 +242,9 @@ fun CharacterCard(
             .wrapContentHeight()
             .padding(8.dp)
             .clickable {
+                Log.d("Navigation", "Navigating to character detail with ID: ${characters.id}")
                 // Navigate to the CharactersDetail screen and pass the character ID as a navigation argument
-                navController.navigate(route = Screen.CharacterDetail.passId(characters.id))
+                navController.navigate(route = Screen.CharacterDetail.passId(characters.id,navController))
             },
         colors = CardDefaults.cardColors(
             containerColor = Color.White

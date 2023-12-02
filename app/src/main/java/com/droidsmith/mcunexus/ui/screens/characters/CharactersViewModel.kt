@@ -8,29 +8,30 @@ import com.droidsmith.mcunexus.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CharactersViewModel @Inject constructor(
     private val charactersUseCase: CharactersUseCase
-):ViewModel(){
-    private val mcuValue = MutableStateFlow(MCUListState())
-    val _mcuValue: StateFlow<MCUListState> = mcuValue
+) : ViewModel() {
+    val _mcuValue = MutableStateFlow(MCUListState())
+    val mcuValue: StateFlow<MCUListState> = _mcuValue.stateIn(viewModelScope, SharingStarted.Lazily, _mcuValue.value)
 
-    fun getAllCharactersData(offset:Int) = viewModelScope.launch(Dispatchers.IO) {
-        charactersUseCase(offset = offset).collect{
-            when(it){
+    fun getAllCharactersData(offset: Int) = viewModelScope.launch(Dispatchers.IO) {
+        charactersUseCase(offset = offset).collect {
+            when (it) {
                 is Response.Success -> {
-                    mcuValue.value = MCUListState(characterList = it.data?: emptyList())
-
+                    _mcuValue.value = MCUListState(characterList = it.data ?: emptyList())
                 }
-                is Response.Loading ->{
-                    mcuValue.value = MCUListState(isLoading = true)
+                is Response.Loading -> {
+                    _mcuValue.value = MCUListState(isLoading = true)
                 }
-                is Response.Error ->{
-                    mcuValue.value = MCUListState(error = it.message?:"An UnexpectedError Occurred")
+                is Response.Error -> {
+                    _mcuValue.value = MCUListState(error = it.message ?: "An UnexpectedError Occurred")
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.droidsmith.mcunexus.ui.screens.characterDetail
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,19 +33,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.droidsmith.mcunexus.R
+import com.droidsmith.mcunexus.domain.model.Character
 import com.droidsmith.mcunexus.ui.Characters
 import com.droidsmith.mcunexus.ui.screens.CHARACTER_DETAIL_ARGUMENT_KEY
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
@@ -57,11 +61,17 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 @Composable
 fun CharacterDetailScreen(
     canNavigateBack: Boolean,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    navController: NavHostController,
+    charactersList: List<Character>
 ) {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val navController = rememberNavController()
+    val navBackStackEntry = navController.currentBackStackEntry
     val characterId = navBackStackEntry?.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY)
+
+    Log.d("Navigation", "Received character ID: $characterId")
+
+    val selectedCharacter = charactersList.find { it.id == characterId }
 
     Scaffold(
         topBar = {
@@ -94,7 +104,11 @@ fun CharacterDetailScreen(
             // Your screen content goes here
             Column {
 
-                CharacterDetails()
+
+                selectedCharacter?.let { character ->
+                    CharacterDetails(character = character)
+                }
+
                 CharacterComics(
                     charactersList = listOf(
                         Characters(
@@ -143,18 +157,20 @@ fun CharacterDetailScreen(
 }
 
 @Composable
-fun CharacterDetails() {
+fun CharacterDetails(
+    character: Character
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp)
+//            .padding(top = 8.dp)
     ) {
+        //TODO: Remove this text and add something to provide the margin space( Spacer Did Not Work Well)
         Text(
-            text = "ABOMINATION ( EMILY BLONSKY )",
+            text = character.name,
             style = MaterialTheme.typography.displaySmall,
             fontFamily = marvel,
-            color = TextWhite,
-            textAlign = TextAlign.Center,
+            color = MarvelRed,
             modifier = Modifier
                 .align(Alignment.Center)
         )
@@ -173,16 +189,40 @@ fun CharacterDetails() {
         Box(
             contentAlignment = Alignment.TopStart,
             modifier = Modifier
+                .size(120.dp)
+                .width(72.dp)
+                .padding(8.dp)
 
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.trial_img),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(120.dp)
-                    .width(72.dp)
+            val imageUrl = "${
+                character.thumbnail.replace(
+                    "http",
+                    "https"
+                )
+            }/portrait_xlarge.${character.thumbnailExt}"
 
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build(),
+                //TODO: Find better images
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
+                contentDescription = character.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
             )
+//            Image(
+//                painter = painterResource(id = R.drawable.trial_img),
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .size(120.dp)
+//                    .width(72.dp)
+//
+//            )
 
         }
         Column(
@@ -190,26 +230,16 @@ fun CharacterDetails() {
                 .align(Alignment.Top)
         ) {
             Text(
-                text = "ABOMINATION ( EMILY BLONSKY )",
+                text = character.name,
                 style = MaterialTheme.typography.bodyLarge,
                 fontFamily = marvel,
                 fontSize = 24.sp
 
             )
             Text(
-                text = "8Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, justo vel dignissim posuere, purus risus auctor felis, vel auctor odio metus a urna. Curabitur congue vel justo eget bibendum. Fusce euismod nisl a quam facilisis congue. Vivamus cursus odio eget enim vulputate, sed semper lorem mattis. Vivamus bibendum quam eget eros finibus, vel hendrerit tortor sollicitudin. Nulla facilisi. Integer bibendum in libero et fermentum. Pellentesque non eros semper, vehicula nulla ac, bibendum justo. Nullam sed cursus tortor. Nulla facilisi. Nulla facilisi.\n" +
-                        "\n" +
-                        "Suspendisse potenti. Sed ac sapien id velit tincidunt volutpat. Fusce fringilla, lorem et consectetur gravida, libero libero congue neque, eu vestibulum purus tortor sit amet felis. Fusce auctor libero ac mi euismod, ac hendrerit justo euismod. Aenean aliquet eu arcu eu volutpat. Duis vel turpis eget velit consectetur hendrerit. Nam dapibus odio id nibh bibendum, ac vestibulum purus ultricies. Integer quis velit a nulla auctor dapibus a a libero. Nullam volutpat in purus sed sollicitudin. In eu urna ut tortor finibus fringilla eu quis ipsum. Sed suscipit elit eu est pellentesque fringilla.\n" +
-                        "\n" +
-                        "Nunc congue venenatis vestibulum. Aenean varius dui nec ex eleifend interdum. Fusce bibendum mauris sit amet lectus facilisis, vel egestas risus pellentesque. Sed luctus velit vel dolor facilisis, eget efficitur sapien euismod. Integer feugiat nisi in justo feugiat volutpat. Fusce ac arcu non nisl feugiat eleifend. Donec posuere dui ac feugiat dignissim. Vivamus lacinia ipsum vel tortor pharetra, vel volutpat libero vehicula. In egestas eros sit amet tellus consectetur, vel venenatis odio scelerisque. Nulla facilisi. Integer a justo ac nulla feugiat tempus. Integer suscipit efficitur dui, in tempus urna dapibus quis.\n" +
-                        "\n" +
-                        "Quisque laoreet, erat sed tincidunt cursus, neque quam lacinia enim, eget tempus ipsum justo at quam. Sed scelerisque velit eget tincidunt mattis. Vivamus ullamcorper enim id lorem pellentesque, non mattis quam fringilla. Vivamus sit amet metus sed nisi tincidunt rhoncus id nec arcu. Donec laoreet feugiat elit a fringilla. Sed eu odio nec felis suscipit facilisis. Curabitur vestibulum feugiat risus, id tempor dolor ultricies eu. Curabitur hendrerit tortor a efficitur euismod. Suspendisse feugiat vehicula neque, eu volutpat elit bibendum vel. Aliquam id ultricies purus. Nulla facilisi. Etiam lacinia neque urna, vel auctor dui tempor at.\n" +
-                        "\n" +
-                        "Sed sollicitudin enim a nulla convallis auctor. Vivamus condimentum, leo a vestibulum varius, turpis sapien lacinia elit, ut malesuada sapien massa eu dui. Phasellus eget fermentum elit. Curabitur auctor libero ac nulla convallis, ac malesuada dolor feugiat. Pellentesque in scelerisque libero. Curabitur malesuada nisi et hendrerit posuere. Sed eu tortor eget elit vestibulum aliquam non a lectus. Nulla facilisi.\n" +
-                        "\n" +
-                        "Sed euismod auctor lectus, sit amet bibendum libero. Pellentesque lacinia urna id tortor vehicula, vel gravida risus facilisis. Sed efficitur ligula nec ligula ultricies, nec tristique orci vestibulum. Sed euismod et purus vel fermentum. Fusce eget lorem quis odio interdum facilisis. Integer eget erat libero. Curabitur id lacinia lorem, ut auctor mi. Maecenas eget congue urna. Duis in lectus nec eros bibendum scelerisque. Sed fringilla urna vel erat rhoncus, sit amet elementum elit feugiat.\n" +
-                        "\n" +
-                        "Duis efficitur, arcu ut euismod ultrices, dui libero scelerisque mi, sit amet pharetra libero elit eget arcu. Sed sit amet erat non libero efficitur facilisis ac a\n",
+                text = character.description.ifBlank {
+                    "Character description not available"
+                },
                 maxLines = 10,
                 style = MaterialTheme.typography.bodyMedium,
 

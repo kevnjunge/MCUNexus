@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.droidsmith.mcunexus.domain.model.Character
 import com.droidsmith.mcunexus.ui.screens.characterDetail.CharacterDetailScreen
 import com.droidsmith.mcunexus.ui.screens.characters.CharactersScreen
 import com.droidsmith.mcunexus.ui.screens.comics.ComicsScreen
@@ -18,7 +19,8 @@ import com.droidsmith.mcunexus.ui.screens.stories.StoriesScreen
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    charactersList: List<Character>
 ) {
     NavHost(
         navController = navController,
@@ -40,14 +42,19 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.CharacterDetail.route,
-            arguments = listOf(navArgument(CHARACTER_DETAIL_ARGUMENT_KEY){
+            arguments = listOf(navArgument(CHARACTER_DETAIL_ARGUMENT_KEY) {
                 type = NavType.IntType
             })
-        ) {
-            Log.d("Args",it.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY).toString())
+        ) { backStackEntry ->
+            val characterId = backStackEntry.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY)
+            Log.d("Navigation", "Received character ID in CharacterDetail route: $characterId")
+            val character = charactersList.find { it.id == characterId }
+            Log.d("Navigation", "Found character in list: $character")
             CharacterDetailScreen(
                 canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.navigateUp() },
+                charactersList = charactersList,
+                navController = navController
             )
         }
         composable(
