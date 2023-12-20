@@ -19,16 +19,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesMCUApiService():MCUApiService{
+    fun providesMCUApiService(): MCUApiService {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(Constants.BASE_URL)
             .build()
             .create(MCUApiService::class.java)
     }
+
     @Provides
     @Singleton
-    fun providesMarvelRepository(api:MCUApiService):MCURepository{
+    fun providesMarvelRepository(api: MCUApiService): MCURepository {
         return MCURepositoryImpl(api)
     }
 }

@@ -6,5 +6,5 @@ data class Character(
     val description: String,
     val thumbnail: String,
     val thumbnailExt: String,
-    val comics : List<String>
+    val comics: List<String>
 )

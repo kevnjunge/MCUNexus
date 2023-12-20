@@ -1,6 +1,5 @@
 package com.droidsmith.mcunexus.ui.screens.characters
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -115,7 +114,10 @@ fun CharactersScreen(
                     SearchCharacterSection()
 
                     if (mcuListState.characterList.isNotEmpty()) {
-                        CharactersDisplay(charactersList = mcuListState.characterList, navController = navController)
+                        CharactersDisplay(
+                            charactersList = mcuListState.characterList,
+                            navController = navController
+                        )
                     } else if (mcuListState.isLoading) {
                         // Show loading indicator
                         CircularProgressIndicator(
@@ -224,7 +226,7 @@ fun CharactersDisplay(charactersList: List<Character>, navController: NavHostCon
             modifier = Modifier.fillMaxHeight()
         ) {
             items(charactersList.size) {
-                CharacterCard(characters = charactersList[it] ,navController = navController)
+                CharacterCard(characters = charactersList[it], navController = navController)
             }
         }
     }
@@ -242,9 +244,13 @@ fun CharacterCard(
             .wrapContentHeight()
             .padding(8.dp)
             .clickable {
-                Log.d("Navigation", "Navigating to character detail with ID: ${characters.id}")
                 // Navigate to the CharactersDetail screen and pass the character ID as a navigation argument
-                navController.navigate(route = Screen.CharacterDetail.passId(characters.id,navController))
+                navController.navigate(
+                    route = Screen.CharacterDetail.passId(
+                        characters.id,
+                        navController
+                    )
+                )
             },
         colors = CardDefaults.cardColors(
             containerColor = Color.White

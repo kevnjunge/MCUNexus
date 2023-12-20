@@ -1,6 +1,5 @@
 package com.droidsmith.mcunexus.ui.screens
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,12 +18,10 @@ import com.droidsmith.mcunexus.ui.screens.stories.StoriesScreen
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController,
-    charactersList: List<Character>
+    navController: NavHostController, charactersList: List<Character>
 ) {
     NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route
+        navController = navController, startDestination = Screen.Home.route
     ) {
         composable(
             route = Screen.Home.route
@@ -45,11 +42,8 @@ fun SetupNavGraph(
             arguments = listOf(navArgument(CHARACTER_DETAIL_ARGUMENT_KEY) {
                 type = NavType.IntType
             })
-        ) { backStackEntry ->
-            val characterId = backStackEntry.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY)
-            Log.d("Navigation", "Received character ID in CharacterDetail route: $characterId")
-            val character = charactersList.find { it.id == characterId }
-            Log.d("Navigation", "Found character in list: $character")
+        ) {
+
             CharacterDetailScreen(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
@@ -60,42 +54,32 @@ fun SetupNavGraph(
         composable(
             route = Screen.Comics.route
         ) {
-            ComicsScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
+            ComicsScreen(canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() })
         }
         composable(
             route = Screen.Creators.route
         ) {
-            CreatorsScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
+            CreatorsScreen(canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() })
         }
         composable(
             route = Screen.Events.route
         ) {
-            EventsScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
+            EventsScreen(canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() })
         }
         composable(
             route = Screen.Series.route
         ) {
-            SeriesScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
+            SeriesScreen(canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() })
         }
         composable(
             route = Screen.Stories.route
         ) {
-            StoriesScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
+            StoriesScreen(canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() })
         }
     }
 }
