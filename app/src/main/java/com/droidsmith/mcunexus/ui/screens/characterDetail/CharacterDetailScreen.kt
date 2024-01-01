@@ -2,23 +2,26 @@ package com.droidsmith.mcunexus.ui.screens.characterDetail
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -62,6 +65,7 @@ import com.droidsmith.mcunexus.ui.screens.characters.CharactersViewModel
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
 import com.droidsmith.mcunexus.ui.theme.marvel
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +131,9 @@ fun CharacterDetailScreen(
 
         // Your screen content goes here
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues = it)
         ) {
 
             selectedCharacter?.let { character ->
@@ -157,25 +163,26 @@ fun CharacterDetails(
             .fillMaxWidth()
             .padding(top = 8.dp)
     ) {
-        //TODO: Remove this text and add something to provide the margin space( Spacer Did Not Work Well)
         Text(
-            text = character.name,
+            text = character.name.uppercase(),
             style = MaterialTheme.typography.displaySmall,
             fontFamily = marvel,
-            color = MarvelRed,
+            color = TextWhite,
+            textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.Center)
         )
     }
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
             .padding(15.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(2.dp))
             .background(Color.White)
             .padding(horizontal = 0.dp, vertical = 10.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Box(
             contentAlignment = Alignment.TopStart,
@@ -209,11 +216,10 @@ fun CharacterDetails(
             modifier = Modifier.align(Alignment.Top)
         ) {
             Text(
-                text = character.name,
+                text = character.name.uppercase(),
                 style = MaterialTheme.typography.bodyLarge,
                 fontFamily = marvel,
                 fontSize = 24.sp
-
             )
             Text(
                 text = character.description.ifBlank {
@@ -221,14 +227,13 @@ fun CharacterDetails(
                 },
                 maxLines = 10,
                 style = MaterialTheme.typography.bodyMedium,
-
-
-                )
+            )
         }
 
 
     }
 }
+
 
 @Composable
 fun CharacterComics(
@@ -263,24 +268,23 @@ fun CharacterComics(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterComicItems(
     comic: Comic
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .width(120.dp)
+            .padding(8.dp)
+            .clip(CutCornerShape(bottomEnd = 16.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.Black
         ),
-        shape = RoundedCornerShape(size = 12.dp)
+        shape = RoundedCornerShape(size = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(all = 12.dp)
-
-        ) {
+        Column {
             Box(modifier = Modifier.fillMaxWidth()) {
                 val imageUrl = "${
                     comic.thumbnail.replace(
@@ -289,8 +293,10 @@ fun CharacterComicItems(
                 }/portrait_xlarge.${comic.thumbnailExt}"
 
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data(imageUrl)
-                        .crossfade(true).build(),
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(imageUrl)
+                        .crossfade(true)
+                        .build(),
                     //TODO: Replace images to fit the comic section
                     error = painterResource(R.drawable.ic_broken_image),
                     placeholder = painterResource(R.drawable.loading_img),
@@ -300,18 +306,27 @@ fun CharacterComicItems(
                 )
 
             }
-            Spacer(
-                modifier = Modifier.padding(5.dp)
-            ) // gap between image and text
-            Text(
-                text = comic.title,
-                fontSize = 20.sp,
-                fontFamily = marvel,
-                fontWeight = FontWeight.Medium,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth()
+                    .height(2.dp)
+                    .background(Color.Red)
             )
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = comic.title.uppercase(Locale.ROOT),
+                    fontSize = 20.sp,
+                    fontFamily = marvel,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .basicMarquee()
+                )
+            }
+
         }
     }
 
@@ -350,6 +365,7 @@ fun CharacterSeries(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterSeriesItems(
     series: Series
@@ -358,16 +374,15 @@ fun CharacterSeriesItems(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .width(120.dp)
+            .padding(8.dp)
+            .clip(CutCornerShape(bottomEnd = 16.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.Black
         ),
-        shape = RoundedCornerShape(size = 12.dp)
+        shape = RoundedCornerShape(size = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(all = 12.dp)
-
-        ) {
+        Column {
             Box(modifier = Modifier.fillMaxWidth()) {
                 val imageUrl = "${
                     series.thumbnail.replace(
@@ -387,18 +402,27 @@ fun CharacterSeriesItems(
                 )
 
             }
-            Spacer(
-                modifier = Modifier.padding(5.dp)
-            ) // gap between image and text
-            Text(
-                text = series.title,
-                fontSize = 20.sp,
-                fontFamily = marvel,
-                fontWeight = FontWeight.Medium,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth()
+                    .height(2.dp)
+                    .background(Color.Red)
             )
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = series.title,
+                    fontSize = 20.sp,
+                    fontFamily = marvel,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .basicMarquee()
+                )
+            }
+
         }
     }
 
@@ -428,7 +452,6 @@ fun CharacterStories(
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 10.dp)
         ) {
             items(storyList.size) {
-                Log.d("CharacterComics", "Rendering Story Item: ${storyList[it].title}")
                 CharacterStoriesItems(stories = storyList[it])
             }
         }
@@ -437,6 +460,7 @@ fun CharacterStories(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterStoriesItems(
     stories: Stories
@@ -445,16 +469,15 @@ fun CharacterStoriesItems(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .width(120.dp)
+            .padding(8.dp)
+            .clip(CutCornerShape(bottomEnd = 16.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.Black
         ),
-        shape = RoundedCornerShape(size = 12.dp)
+        shape = RoundedCornerShape(size = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(all = 12.dp)
-
-        ) {
+        Column {
             Box(modifier = Modifier.fillMaxWidth()) {
 
                 Image(
@@ -468,18 +491,27 @@ fun CharacterStoriesItems(
 
 
             }
-            Spacer(
-                modifier = Modifier.padding(5.dp)
-            ) // gap between image and text
-            Text(
-                text = stories.title,
-                fontSize = 20.sp,
-                fontFamily = marvel,
-                fontWeight = FontWeight.Medium,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth()
+                    .height(2.dp)
+                    .background(Color.Red)
             )
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = stories.title.uppercase(Locale.ROOT),
+                    fontSize = 20.sp,
+                    fontFamily = marvel,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .basicMarquee()
+                )
+            }
+
         }
     }
 
@@ -508,7 +540,6 @@ fun CharacterEvents(
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 10.dp)
         ) {
             items(eventsList.size) {
-                Log.d("CharacterComics", "Rendering Events Item: ${eventsList[it].title}")
                 CharacterEventsItems(events = eventsList[it])
             }
         }
@@ -517,6 +548,7 @@ fun CharacterEvents(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CharacterEventsItems(
     events: Events
@@ -525,16 +557,15 @@ fun CharacterEventsItems(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(8.dp),
+            .width(120.dp)
+            .padding(8.dp)
+            .clip(CutCornerShape(bottomEnd = 16.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.Black
         ),
-        shape = RoundedCornerShape(size = 12.dp)
+        shape = RoundedCornerShape(size = 2.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(all = 12.dp)
-
-        ) {
+        Column {
             Box(modifier = Modifier.fillMaxWidth()) {
 //                val imageUrl = "${
 //                    events.thumbnail.replace(
@@ -560,18 +591,27 @@ fun CharacterEventsItems(
                 )
 
             }
-            Spacer(
-                modifier = Modifier.padding(5.dp)
-            ) // gap between image and text
-            Text(
-                text = events.title,
-                fontSize = 20.sp,
-                fontFamily = marvel,
-                fontWeight = FontWeight.Medium,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth()
+                    .height(2.dp)
+                    .background(Color.Red)
             )
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = events.title.uppercase(Locale.ROOT),
+                    fontSize = 20.sp,
+                    fontFamily = marvel,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .basicMarquee()
+                )
+            }
+
         }
     }
 
