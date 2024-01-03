@@ -9,6 +9,7 @@ import com.droidsmith.mcunexus.data.network.allStoriesResponse.Stories
 interface MCURepository {
 
     suspend fun getAllCharacter(offset: Int): CharactersDTO
+    suspend fun searchCharacter(offset: Int, name: String): CharactersDTO
     suspend fun getAllComic(offset: Int, characterId: String): Comic
     suspend fun getAllSeries(offset: Int, characterId: String): Series
     suspend fun getAllStories(offset: Int, characterId: String): Stories

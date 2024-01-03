@@ -17,6 +17,16 @@ interface MCUApiService {
         @Query("apikey") apikey: String = Constants.API_KEY,
         @Query("ts") ts: String = Constants.timeStamp,
         @Query("hash") hash: String = Constants.hash(),
+        @Query("offset") offset: String = "0",
+        @Query("limit") limit: String = "99"
+    ): CharactersDTO
+
+    @GET("characters")
+    suspend fun searchCharacters(
+        @Query("apikey") apikey: String = Constants.API_KEY,
+        @Query("name") name: String,
+        @Query("ts") ts: String = Constants.timeStamp,
+        @Query("hash") hash: String = Constants.hash(),
         @Query("offset") offset: String = "0"
     ): CharactersDTO
 

@@ -16,6 +16,10 @@ class MCURepositoryImpl @Inject constructor(
         return api.getCharacters(offset = offset.toString())
     }
 
+    override suspend fun searchCharacter(offset: Int, name: String): CharactersDTO {
+        return api.searchCharacters(offset = offset.toString(), name = name)
+    }
+
     override suspend fun getAllComic(offset: Int, characterId: String): Comic {
         return api.getCharacterComics(offset = offset.toString(), characterID = characterId)
     }

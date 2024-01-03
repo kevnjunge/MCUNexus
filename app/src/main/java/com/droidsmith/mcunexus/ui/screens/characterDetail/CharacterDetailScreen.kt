@@ -81,9 +81,8 @@ fun CharacterDetailScreen(
 //    val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntry
     val characterId = navBackStackEntry?.arguments?.getInt(CHARACTER_DETAIL_ARGUMENT_KEY)
-
+    Log.d("CharacterDetailScreen", "Received character ID: $characterId")
     val selectedCharacter = charactersList.find { it.id == characterId }
-
 
     // Observe comics state
     val comicsState = viewModel.comicListState.collectAsState().value
@@ -259,7 +258,6 @@ fun CharacterComics(
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 10.dp)
         ) {
             items(comicList.size) {
-                Log.d("CharacterComics", "Rendering Comic Item: ${comicList[it].title}")
                 CharacterComicItems(comic = comicList[it])
             }
         }
@@ -356,7 +354,6 @@ fun CharacterSeries(
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 10.dp)
         ) {
             items(seriesList.size) {
-                Log.d("CharacterSeries", "Rendering Series Item: ${seriesList[it].title}")
                 CharacterSeriesItems(series = seriesList[it])
             }
         }

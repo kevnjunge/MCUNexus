@@ -1,11 +1,11 @@
 package com.droidsmith.mcunexus.ui.screens.characters
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.droidsmith.mcunexus.domain.usecases.CharactersUseCase
 import com.droidsmith.mcunexus.domain.usecases.ComicsUseCase
 import com.droidsmith.mcunexus.domain.usecases.EventsUseCase
+import com.droidsmith.mcunexus.domain.usecases.SearchCharacterUseCase
 import com.droidsmith.mcunexus.domain.usecases.SeriesUseCase
 import com.droidsmith.mcunexus.domain.usecases.StoriesUseCase
 import com.droidsmith.mcunexus.ui.MCUListState
@@ -22,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CharactersViewModel @Inject constructor(
     private val charactersUseCase: CharactersUseCase,
+    private val searchCharacterUseCase: SearchCharacterUseCase,
     private val comicsUseCase: ComicsUseCase,
     private val seriesUseCase: SeriesUseCase,
     private val storiesUseCase: StoriesUseCase,
@@ -34,6 +35,10 @@ class CharactersViewModel @Inject constructor(
     val _comicListState = MutableStateFlow(MCUListState())
     val comicListState: StateFlow<MCUListState> =
         _comicListState.stateIn(viewModelScope, SharingStarted.Lazily, _comicListState.value)
+
+    val _searchListState = MutableStateFlow(MCUListState())
+    val characterSearchListState: StateFlow<MCUListState> =
+        _searchListState.stateIn(viewModelScope, SharingStarted.Lazily, _searchListState.value)
 
     val _seriesListState = MutableStateFlow(MCUListState())
     val seriesListState: StateFlow<MCUListState> =
@@ -66,6 +71,26 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
+    // Function to perform search
+    fun searchCharacters(offset: Int, query: String) = viewModelScope.launch(Dispatchers.IO) {
+        searchCharacterUseCase(offset = offset, query = query).collect {
+            when (it) {
+                is Response.Success -> {
+                    _searchListState.value = MCUListState(characterList = it.data ?: emptyList())
+                }
+
+                is Response.Loading -> {
+                    _searchListState.value = MCUListState(isLoading = true)
+                }
+
+                is Response.Error -> {
+                    _searchListState.value =
+                        MCUListState(error = it.message ?: "An UnexpectedError Occurred")
+                }
+            }
+        }
+    }
+
     fun getAllCharacterComic(offset: Int, characterId: String) =
         viewModelScope.launch(Dispatchers.IO) {
             comicsUseCase(offset = offset, characterId = characterId).collect {
@@ -88,7 +113,6 @@ class CharactersViewModel @Inject constructor(
 
     fun getAllCharacterSeries(offset: Int, characterId: String) =
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("ViewModel", "Fetching series for character ID: $characterId")
             seriesUseCase(offset = offset, characterId = characterId).collect {
                 when (it) {
                     is Response.Success -> {

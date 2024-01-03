@@ -1,5 +1,6 @@
 package com.droidsmith.mcunexus.ui.screens.characters
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -76,7 +77,9 @@ fun CharactersScreen(
 ) {
 
     // Collect data from the ViewModel
-    val mcuListState by viewModel._mcuValue.collectAsState()
+    val mcuListState by viewModel.mcuValue.collectAsState()
+    val searchListState by viewModel.characterSearchListState.collectAsState()
+    Log.d("Composable", "Search Results: ${searchListState.characterList}")
 
     LaunchedEffect(viewModel) {
         // Fetch data when the Composable is first created
@@ -116,24 +119,42 @@ fun CharactersScreen(
                     .padding(paddingValues = paddingValues)
             ) {
                 Column {
-                    SearchCharacterSection()
+                    SearchCharacterSection(viewModel = viewModel)
 
-                    if (mcuListState.characterList.isNotEmpty()) {
-                        CharactersDisplay(
-                            charactersList = mcuListState.characterList,
-                            navController = navController
-                        )
-                    } else if (mcuListState.isLoading) {
-                        // Show loading indicator
+                    //Display characters based on whether it's a regular list or a search result
+
+                    val charactersToDisplay = if (searchListState.characterList.isNotEmpty()) {
+                        searchListState.characterList
+                    } else {
+                        mcuListState.characterList
+                    }
+                    if (searchListState.isLoading) {
+                        // Show loading indicator during search
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(16.dp)
                         )
-                    } else if (mcuListState.error.isNotEmpty()) {
-                        // Show error message
+                    } else if (charactersToDisplay.isNotEmpty() || searchListState.isLoading) {
+                        // Display search results or regular list
+                        CharactersDisplay(
+                            charactersList = charactersToDisplay,
+                            navController = navController
+                        )
+                    } else if (mcuListState.isLoading) {
+                        // Show loading indicator for regular list
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp)
+                        )
+                    } else if (mcuListState.error.isNotEmpty() || searchListState.error.isNotEmpty()) {
+                        // Display Error Message
                         Text(
-                            text = "Something ain't right check your internet ${mcuListState.error}",
+                            text = "Something ain't right check your internet ${
+                                mcuListState.error +
+                                        searchListState.error
+                            }",
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -149,7 +170,7 @@ fun CharactersScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchCharacterSection() {
+fun SearchCharacterSection(viewModel: CharactersViewModel) {
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     Box(
@@ -182,6 +203,7 @@ fun SearchCharacterSection() {
             },
             onSearch = {
                 active = false
+                viewModel.searchCharacters(offset = 0, query = text)
             },
             active = active,
             onActiveChange = {
@@ -252,6 +274,7 @@ fun CharacterCard(
             .clip(CutCornerShape(bottomEnd = 16.dp))
             .clickable {
                 // Navigate to the CharactersDetail screen and pass the character ID as a navigation argument
+                Log.d("CharacterCard", "Navigating to CharacterDetailScreen with ID: ${characters.id}")
                 navController.navigate(
                     route = Screen.CharacterDetail.passId(
                         characters.id,
@@ -264,7 +287,7 @@ fun CharacterCard(
             containerColor = Color.Black
         )
     ) {
-        Column( ) {
+        Column() {
             Box(modifier = Modifier.fillMaxWidth()) {
                 val imageUrl = "${
                     characters.thumbnail.replace(
