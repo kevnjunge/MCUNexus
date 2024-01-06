@@ -79,7 +79,7 @@ fun CharactersScreen(
     // Collect data from the ViewModel
     val mcuListState by viewModel.mcuValue.collectAsState()
     val searchListState by viewModel.characterSearchListState.collectAsState()
-    Log.d("Composable", "Search Results: ${searchListState.characterList}")
+    Log.d("CharacterScreen", "Search Results: ${searchListState.characterList}")
 
     LaunchedEffect(viewModel) {
         // Fetch data when the Composable is first created
@@ -139,6 +139,7 @@ fun CharactersScreen(
                         // Display search results or regular list
                         CharactersDisplay(
                             charactersList = charactersToDisplay,
+                            searchResultsList = searchListState.characterList,
                             navController = navController
                         )
                     } else if (mcuListState.isLoading) {
@@ -242,7 +243,10 @@ fun SearchCharacterSection(viewModel: CharactersViewModel) {
 }
 
 @Composable
-fun CharactersDisplay(charactersList: List<Character>, navController: NavHostController) {
+fun CharactersDisplay(
+    charactersList: List<Character>,
+    searchResultsList: List<Character>,
+                      navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -252,8 +256,14 @@ fun CharactersDisplay(charactersList: List<Character>, navController: NavHostCon
             contentPadding = PaddingValues(start = 7.5.dp, end = 7.5.dp, bottom = 100.dp),
             modifier = Modifier.fillMaxHeight()
         ) {
-            items(charactersList.size) {
-                CharacterCard(characters = charactersList[it], navController = navController)
+            val combinedList = if (searchResultsList.isNotEmpty()) {
+                searchResultsList
+            } else {
+                charactersList
+            }
+
+            items(combinedList.size) {
+                CharacterCard(characters = combinedList[it], navController = navController)
             }
         }
     }
@@ -274,7 +284,6 @@ fun CharacterCard(
             .clip(CutCornerShape(bottomEnd = 16.dp))
             .clickable {
                 // Navigate to the CharactersDetail screen and pass the character ID as a navigation argument
-                Log.d("CharacterCard", "Navigating to CharacterDetailScreen with ID: ${characters.id}")
                 navController.navigate(
                     route = Screen.CharacterDetail.passId(
                         characters.id,

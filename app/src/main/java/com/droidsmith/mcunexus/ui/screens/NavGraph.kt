@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.droidsmith.mcunexus.domain.model.Character
-import com.droidsmith.mcunexus.ui.screens.characterDetail.CharacterDetailScreen
+import com.droidsmith.mcunexus.ui.screens.characters.CharacterDetailScreen
 import com.droidsmith.mcunexus.ui.screens.characters.CharactersScreen
 import com.droidsmith.mcunexus.ui.screens.comics.ComicsScreen
 import com.droidsmith.mcunexus.ui.screens.creators.CreatorsScreen

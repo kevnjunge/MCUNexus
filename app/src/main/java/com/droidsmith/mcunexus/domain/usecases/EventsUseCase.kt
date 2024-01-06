@@ -14,7 +14,10 @@ class EventsUseCase @Inject constructor(
     operator fun invoke(offset: Int, characterId: String): Flow<Response<List<Events>>> = flow {
         try {
             emit(Response.Loading())
-            val list = repository.getAllEvents(offset, characterId = characterId).data.results.map {
+            val list = repository.getAllEventsByCharacterId(
+                offset,
+                characterId = characterId
+            ).data.results.map {
                 it.toEvent()
             }
             emit(Response.Success(list))

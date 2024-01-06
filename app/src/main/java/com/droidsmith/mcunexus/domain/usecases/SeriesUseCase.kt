@@ -14,7 +14,7 @@ class SeriesUseCase @Inject constructor(
     operator fun invoke(offset: Int, characterId: String): Flow<Response<List<Series>>> = flow {
         try {
             emit(Response.Loading())
-            val list = repository.getAllSeries(
+            val list = repository.getAllSeriesByCharacterId(
                 offset = offset,
                 characterId = characterId
             ).data.results.map {

@@ -11,16 +11,25 @@ import javax.inject.Inject
 class ComicsUseCase @Inject constructor(
     private val repository: MCURepository
 ) {
-    operator fun invoke(offset: Int, characterId: String): Flow<Response<List<Comic>>> = flow {
+    operator fun invoke(offset: Int, characterId: String?): Flow<Response<List<Comic>>> = flow {
         try {
             emit(Response.Loading())
-            val list = repository.getAllComic(
-                offset = offset,
-                characterId = characterId
-            ).data.results.map {
-                it.toComic()
+
+            val list = if (characterId != null) {
+                repository.getAllComicByCharacterId(
+                    offset = offset,
+                    characterId = characterId
+                ).data.results.map {
+                    it.toComic()
+                }
+            } else {
+                repository.getAllComics().data.results.map {
+                    it.toComic()
+                }
             }
+
             emit(Response.Success(list))
+
         } catch (e: HttpException) {
             emit(Response.Error(e.printStackTrace().toString()))
         } catch (e: HttpException) {

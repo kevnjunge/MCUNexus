@@ -15,7 +15,10 @@ class StoriesUseCase @Inject constructor(
         try {
             emit(Response.Loading())
             val list =
-                repository.getAllStories(offset, characterId = characterId).data.results.map {
+                repository.getAllStoriesByCharacterId(
+                    offset,
+                    characterId = characterId
+                ).data.results.map {
                     it.toStories()
                 }
             emit(Response.Success(list))

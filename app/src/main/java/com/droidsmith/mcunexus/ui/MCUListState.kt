@@ -6,11 +6,11 @@ import com.droidsmith.mcunexus.domain.model.Events
 import com.droidsmith.mcunexus.domain.model.Series
 import com.droidsmith.mcunexus.domain.model.Stories
 
-data class MCUListState (
-    val isLoading : Boolean = false,
-    val characterList : List<Character> = emptyList(),
-    val characterSearchList : List<Comic> = emptyList(),
-    val comicList : List<Comic> = emptyList(),
+data class MCUListState(
+    val isLoading: Boolean = false,
+    val characterList: List<Character> = emptyList(),
+    val characterSearchList: List<Character> = emptyList(),
+    val comicList: List<Comic> = emptyList(),
     val seriesList: List<Series> = emptyList(),
     val storiesList: List<Stories> = emptyList(),
     val eventsList: List<Events> = emptyList(),

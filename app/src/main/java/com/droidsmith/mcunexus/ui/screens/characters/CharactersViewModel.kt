@@ -124,7 +124,7 @@ class CharactersViewModel @Inject constructor(
                     }
 
                     is Response.Error -> {
-                        _comicListState.value =
+                        _searchListState.value =
                             MCUListState(error = it.message ?: "An UnexpectedError Occurred")
                     }
                 }

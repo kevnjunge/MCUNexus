@@ -20,19 +20,23 @@ class MCURepositoryImpl @Inject constructor(
         return api.searchCharacters(offset = offset.toString(), name = name)
     }
 
-    override suspend fun getAllComic(offset: Int, characterId: String): Comic {
+    override suspend fun getAllComicByCharacterId(offset: Int, characterId: String): Comic {
         return api.getCharacterComics(offset = offset.toString(), characterID = characterId)
     }
 
-    override suspend fun getAllSeries(offset: Int, characterId: String): Series {
+    override suspend fun getAllSeriesByCharacterId(offset: Int, characterId: String): Series {
         return api.getCharacterSeries(offset = offset.toString(), characterID = characterId)
     }
 
-    override suspend fun getAllStories(offset: Int, characterId: String): Stories {
+    override suspend fun getAllStoriesByCharacterId(offset: Int, characterId: String): Stories {
         return api.getCharacterStories(offset = offset.toString(), characterID = characterId)
     }
 
-    override suspend fun getAllEvents(offset: Int, characterId: String): Events {
+    override suspend fun getAllEventsByCharacterId(offset: Int, characterId: String): Events {
         return api.getCharacterEvents(offset = offset.toString(), characterID = characterId)
+    }
+
+    override suspend fun getAllComics(): Comic {
+        return api.getComics()
     }
 }
