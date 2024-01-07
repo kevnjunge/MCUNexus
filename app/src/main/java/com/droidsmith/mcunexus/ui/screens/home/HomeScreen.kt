@@ -89,7 +89,7 @@ fun HomeScreen(
                                 R.drawable.comic
                             ),
                             Comic(
-                                title = "CREATORS",
+                                title = "SERIES",
                                 R.drawable.iron_man
                             ),
                             Comic(
@@ -97,7 +97,7 @@ fun HomeScreen(
                                 R.drawable.iron_man
                             ),
                             Comic(
-                                title = "SERIES",
+                                title = "CREATORS",
                                 R.drawable.iron_man
                             ),
                             Comic(
@@ -204,9 +204,9 @@ fun ComicsContent(
                         when (clickedIndex) {
                             0 -> navController.navigate(route = Screen.Character.route)
                             1 -> navController.navigate(route = Screen.Comics.route)
-                            2 -> navController.navigate(route = Screen.Creators.route)
+                            2 -> navController.navigate(route = Screen.Series.route)
                             3 -> navController.navigate(route = Screen.Events.route)
-                            4 -> navController.navigate(route = Screen.Series.route)
+                            4 -> navController.navigate(route = Screen.Creators.route)
                             5 -> navController.navigate(route = Screen.Stories.route)
                         }
                     }

@@ -11,14 +11,21 @@ import javax.inject.Inject
 class SeriesUseCase @Inject constructor(
     private val repository: MCURepository
 ) {
-    operator fun invoke(offset: Int, characterId: String): Flow<Response<List<Series>>> = flow {
+    operator fun invoke(offset: Int, characterId: String?): Flow<Response<List<Series>>> = flow {
         try {
             emit(Response.Loading())
-            val list = repository.getAllSeriesByCharacterId(
-                offset = offset,
-                characterId = characterId
-            ).data.results.map {
-                it.toSeries()
+
+            val list = if (characterId != null) {
+                repository.getAllSeriesByCharacterId(
+                    offset = offset,
+                    characterId = characterId
+                ).data.results.map {
+                    it.toSeries()
+                }
+            } else {
+                repository.getAllSeries().data.results.map {
+                    it.toSeries()
+                }
             }
             emit(Response.Success(list))
         } catch (e: HttpException) {

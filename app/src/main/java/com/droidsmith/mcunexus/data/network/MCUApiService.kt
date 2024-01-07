@@ -78,6 +78,15 @@ interface MCUApiService {
         @Query("limit") limit: String = "99"
     ): Comic
 
+    @GET("series")
+    suspend fun getSeries(
+        @Query("apikey") apikey: String = Constants.API_KEY,
+        @Query("ts") ts: String = Constants.timeStamp,
+        @Query("hash") hash: String = Constants.hash(),
+        @Query("offset") offset: String = "0",
+        @Query("limit") limit: String = "99"
+    ): Series
+
 
 }
 

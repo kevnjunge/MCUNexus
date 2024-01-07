@@ -79,7 +79,7 @@ fun CharactersScreen(
     // Collect data from the ViewModel
     val mcuListState by viewModel.mcuValue.collectAsState()
     val searchListState by viewModel.characterSearchListState.collectAsState()
-    Log.d("CharacterScreen", "Search Results: ${searchListState.characterList}")
+    Log.d("CharacterScreen", "Search Results: ${searchListState.characterSearchList}")
 
     LaunchedEffect(viewModel) {
         // Fetch data when the Composable is first created
@@ -123,8 +123,8 @@ fun CharactersScreen(
 
                     //Display characters based on whether it's a regular list or a search result
 
-                    val charactersToDisplay = if (searchListState.characterList.isNotEmpty()) {
-                        searchListState.characterList
+                    val charactersToDisplay = if (searchListState.characterSearchList.isNotEmpty()) {
+                        searchListState.characterSearchList
                     } else {
                         mcuListState.characterList
                     }
@@ -139,7 +139,7 @@ fun CharactersScreen(
                         // Display search results or regular list
                         CharactersDisplay(
                             charactersList = charactersToDisplay,
-                            searchResultsList = searchListState.characterList,
+                            searchResultsList = searchListState.characterSearchList,
                             navController = navController
                         )
                     } else if (mcuListState.isLoading) {

@@ -39,4 +39,8 @@ class MCURepositoryImpl @Inject constructor(
     override suspend fun getAllComics(): Comic {
         return api.getComics()
     }
+
+    override suspend fun getAllSeries(): Series {
+        return api.getSeries()
+    }
 }

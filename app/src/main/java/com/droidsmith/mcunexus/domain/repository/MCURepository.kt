@@ -14,7 +14,7 @@ interface MCURepository {
     suspend fun getAllSeriesByCharacterId(offset: Int, characterId: String): Series
     suspend fun getAllStoriesByCharacterId(offset: Int, characterId: String): Stories
     suspend fun getAllEventsByCharacterId(offset: Int, characterId: String): Events
-
     suspend fun getAllComics(): Comic
+    suspend fun getAllSeries(): Series
 
 }

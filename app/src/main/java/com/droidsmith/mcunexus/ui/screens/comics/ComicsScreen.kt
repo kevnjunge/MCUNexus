@@ -115,23 +115,6 @@ fun ComicsScreen(
                         }
                     )
 
-//                    if (comicListState.characterList.isNotEmpty()) {
-//                        CharactersDisplay(charactersList = mcuListState.characterList, navController = navController)
-//                    } else if (mcuListState.isLoading) {
-//                        // Show loading indicator
-//                        CircularProgressIndicator(
-//                            modifier = Modifier
-//                                .fillMaxSize()
-//                                .padding(16.dp)
-//                        )
-//                    } else if (mcuListState.error.isNotEmpty()) {
-//                        // Show error message
-//                        Text(
-//                            text = mcuListState.error,
-//                            modifier = Modifier.padding(16.dp)
-//                        )
-//                    }
-
                     if (comicListState.comicList.isNotEmpty()) {
                         ComicDisplay(comicsList = comicListState.comicList)
                     } else if (comicListState.isLoading) {

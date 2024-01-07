@@ -76,7 +76,7 @@ class CharactersViewModel @Inject constructor(
         searchCharacterUseCase(offset = offset, query = query).collect {
             when (it) {
                 is Response.Success -> {
-                    _searchListState.value = MCUListState(characterList = it.data ?: emptyList())
+                    _searchListState.value = MCUListState(characterSearchList = it.data ?: emptyList())
                 }
 
                 is Response.Loading -> {
