@@ -27,17 +27,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.droidsmith.mcunexus.Comic
 import com.droidsmith.mcunexus.R
+import com.droidsmith.mcunexus.ui.MCUListState
 import com.droidsmith.mcunexus.ui.screens.Screen
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
@@ -47,8 +56,15 @@ import com.droidsmith.mcunexus.ui.theme.marvel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
+
+    val marvelUpcomingState by viewModel.marvelUpcomingState.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.getMarvelUpcomingData()
+    }
 
     Scaffold(
         topBar = {
@@ -77,7 +93,7 @@ fun HomeScreen(
                 ) {
                 Column {
 
-                    MarvelsUpcoming()
+                    MarvelsUpcoming(marvelUpcomingState)
                     ComicsContent(
                         comicItems = listOf(
                             Comic(
@@ -120,7 +136,9 @@ fun HomeScreen(
 
 
 @Composable
-fun MarvelsUpcoming() {
+fun MarvelsUpcoming(
+    marvelUpcomingState: MCUListState
+) {
 
     Box(modifier = Modifier.fillMaxWidth())
     {
@@ -147,15 +165,23 @@ fun MarvelsUpcoming() {
         Box(
             contentAlignment = Alignment.TopStart,
             modifier = Modifier
+                .padding(6.dp)
 
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.trial_img),
-                contentDescription = null,
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(marvelUpcomingState.marvelUpcoming?.poster_url)
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(R.drawable.loading_img),
+                error = painterResource(R.drawable.ic_broken_image),
+                contentDescription = marvelUpcomingState.marvelUpcoming?.title,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .clip(RoundedCornerShape(3.dp))
                     .size(120.dp)
                     .width(72.dp)
-
             )
 
         }
@@ -164,18 +190,21 @@ fun MarvelsUpcoming() {
                 .align(Alignment.Top)
         ) {
             Text(
-                text = "Fantastic Four",
+                text = marvelUpcomingState.marvelUpcoming?.title.orEmpty().uppercase(),
                 style = MaterialTheme.typography.bodyLarge,
                 fontFamily = marvel,
-                fontSize = 24.sp
-
+                fontSize = 26.sp,
+                modifier = Modifier
+                    .padding(6.dp)
             )
             Text(
-                text = "8 Days To Go !!",
-                style = MaterialTheme.typography.bodyMedium,
-
-
-                )
+                text = marvelUpcomingState.marvelUpcoming?.days_until.toString() + " DAYS TO GO!",
+                style = MaterialTheme.typography.bodyLarge,
+                fontFamily = marvel,
+                fontSize = 22.sp,
+                modifier = Modifier
+                    .padding(6.dp)
+            )
         }
 
 
