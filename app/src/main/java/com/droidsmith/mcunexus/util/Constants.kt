@@ -12,7 +12,7 @@ object Constants {
     val timeStamp = Timestamp(System.currentTimeMillis()).time.toString()
     const val API_KEY = BuildConfig.PUBLIC_KEY
     const val PRIVATE_KEY = BuildConfig.PRIVATE_KEY
-    const val limit = "20"
+
 
     fun hash(): String {
 

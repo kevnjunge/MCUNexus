@@ -135,7 +135,7 @@ fun CharactersScreen(
                                 .fillMaxSize()
                                 .padding(16.dp)
                         )
-                    } else if (charactersToDisplay.isNotEmpty() || searchListState.isLoading) {
+                    } else if (charactersToDisplay.isNotEmpty()) {
                         // Display search results or regular list
                         CharactersDisplay(
                             charactersList = charactersToDisplay,

@@ -174,8 +174,8 @@ fun MarvelsUpcoming(
                     .data(marvelUpcomingState.marvelUpcoming?.poster_url)
                     .crossfade(true)
                     .build(),
-                placeholder = painterResource(R.drawable.loading_img),
                 error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = marvelUpcomingState.marvelUpcoming?.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -204,7 +204,7 @@ fun MarvelsUpcoming(
                 fontSize = 22.sp,
                 modifier = Modifier
                     .padding(6.dp)
-            )
+                )
         }
 
 
