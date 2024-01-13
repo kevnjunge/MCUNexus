@@ -3,20 +3,22 @@
 MCU Nexus App is a Jetpack Compose app that allows users to explore a vast collection of Marvel Comics, characters, and related content. The app fetches data from the Marvel API
 ## Screenshots
 
-| ![Screenshot 1](assets/home.jpg) | ![Screenshot 2](assets/characters.jpg) |
+|  *Home Screen*    |  *Characters Screen* |
 |:--------------------------------:|:--------------------------------------:|
-|          *Home Screen*           |          *Characters Screen*           |
+| <img src="assets/home.jpg" width="300" height="600" alt="Screenshot 1"> | <img src="assets/characters.jpg" width="300" height="600" alt="Screenshot 1"> |
 
-| ![Screenshot 3](assets/character_details.gif) | ![Screenshot 4](assets/series.jpg) |
-|:---------------------------------------------:|:----------------------------------:|
-|          *Character Details Screen*           |          *Series Screen*           |
+|  *Character Details Screen*    |  *Series Screen* |
+|:--------------------------------:|:--------------------------------------:|
+| <img src="assets/character_details.gif" width="300" height="600" alt="Screenshot 1"> | <img src="assets/series.jpg" width="300" height="600" alt="Screenshot 1"> |
+
 
 
 ## Features
 
 - Browse a vast collection of Marvel Comics.
 - Explore detailed information about Marvel characters.
-
+- Countdown to the next MCU film courtesy of [When is the next MCU film](https://github.com/DiljotSG/MCU-Countdown/blob/develop/docs/API.md)
+  
 ## Technologies Used
 
 - Kotlin
@@ -45,8 +47,11 @@ To get started with the app:
 
 3. **Build and Run:**
 
-    - Build and run the app using Android Studio.
+    - Build and run the app using Android Studio. 
 
+## Design 
+
+App design by [Coding with Evan](https://www.youtube.com/shorts/bagAfxca-nE)
 
 ## Contributing
 
