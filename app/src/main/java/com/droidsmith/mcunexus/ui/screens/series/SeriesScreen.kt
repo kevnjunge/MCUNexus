@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -49,6 +50,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.droidsmith.mcunexus.R
 import com.droidsmith.mcunexus.domain.model.Series
+import com.droidsmith.mcunexus.ui.components.AttributionText
 import com.droidsmith.mcunexus.ui.components.SearchSection
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
@@ -130,6 +132,7 @@ fun SeriesScreen(
                     }
 
                 }
+                AttributionText(modifier = Modifier.align(Alignment.BottomCenter))
             }
 
         },

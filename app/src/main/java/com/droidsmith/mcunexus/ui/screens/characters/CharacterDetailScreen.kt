@@ -60,6 +60,7 @@ import com.droidsmith.mcunexus.domain.model.Comic
 import com.droidsmith.mcunexus.domain.model.Events
 import com.droidsmith.mcunexus.domain.model.Series
 import com.droidsmith.mcunexus.domain.model.Stories
+import com.droidsmith.mcunexus.ui.components.AttributionText
 import com.droidsmith.mcunexus.ui.screens.CHARACTER_DETAIL_ARGUMENT_KEY
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
@@ -128,25 +129,28 @@ fun CharacterDetailScreen(
     }, content = {
 
         // Your screen content goes here
-        Column(
+        Box(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues = it)
         ) {
+            Column {
 
-            selectedCharacter?.let { character ->
-                CharacterDetails(character = character)
+                selectedCharacter?.let { character ->
+                    CharacterDetails(character = character)
+                }
+
+                CharacterComics(comicList = comicsState.comicList)
+
+                CharacterSeries(seriesList = seriesState.seriesList)
+
+                CharacterStories(storyList = storiesState.storiesList)
+
+                CharacterEvents(eventsList = eventsState.eventsList)
+
+
             }
-
-            CharacterComics(comicList = comicsState.comicList)
-
-            CharacterSeries(seriesList = seriesState.seriesList)
-
-            CharacterStories(storyList = storiesState.storiesList)
-
-            CharacterEvents(eventsList = eventsState.eventsList)
-
-
+            AttributionText(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }, containerColor = MarvelRed
     )

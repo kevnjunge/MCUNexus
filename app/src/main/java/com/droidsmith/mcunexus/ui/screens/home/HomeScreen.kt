@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -106,15 +107,15 @@ fun HomeScreen(
                             ),
                             Comic(
                                 title = "SERIES",
-                                R.drawable.iron_man
+                                R.drawable.series
                             ),
                             Comic(
                                 title = "EVENTS",
-                                R.drawable.iron_man
+                                R.drawable.event
                             ),
                             Comic(
                                 title = "CREATORS",
-                                R.drawable.iron_man
+                                R.drawable.creator
                             ),
                             Comic(
                                 title = "STORIES",
@@ -194,6 +195,7 @@ fun MarvelsUpcoming(
                 style = MaterialTheme.typography.bodyLarge,
                 fontFamily = marvel,
                 fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(6.dp)
             )
@@ -202,6 +204,7 @@ fun MarvelsUpcoming(
                 style = MaterialTheme.typography.bodyLarge,
                 fontFamily = marvel,
                 fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(6.dp)
                 )

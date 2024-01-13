@@ -60,6 +60,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.droidsmith.mcunexus.R
 import com.droidsmith.mcunexus.domain.model.Character
+import com.droidsmith.mcunexus.ui.components.AttributionText
 import com.droidsmith.mcunexus.ui.screens.Screen
 import com.droidsmith.mcunexus.ui.theme.MarvelRed
 import com.droidsmith.mcunexus.ui.theme.TextWhite
@@ -161,8 +162,9 @@ fun CharactersScreen(
                     }
 
                 }
-
+                AttributionText(modifier = Modifier.align(Alignment.BottomCenter))
             }
+
         },
         containerColor = MarvelRed
     )
